@@ -31,7 +31,7 @@
  * @author LOCKON CO.,LTD.
  * @version $Id: $
  */
-class CustomerStatusManagement extends SC_Plugin_Base
+class LoginAllCustomerStatus extends SC_Plugin_Base
 {
     /**
      * コンストラクタ
@@ -98,13 +98,6 @@ class CustomerStatusManagement extends SC_Plugin_Base
      */
     public function enable($arrPlugin, $objPluginInstaller = null)
     {
-        // 有効時、プラグイン情報に値を入れたい場合使う
-        self::updatePlugin($arrPlugin["plugin_code"], array(
-            "free_field1" => "text1",
-            "free_field2" => "text2",
-            "free_field3" => "text3",
-            "free_field4" => "text4",
-        ));
     }
 
     /**
@@ -117,13 +110,6 @@ class CustomerStatusManagement extends SC_Plugin_Base
      */
     public function disable($arrPlugin, $objPluginInstaller = null)
     {
-        // 無効時、プラグイン情報に値を初期化したい場合使う
-        self::updatePlugin($arrPlugin["plugin_code"], array(
-            "free_field1" => null,
-            "free_field2" => null,
-            "free_field3" => null,
-            "free_field4" => null,
-        ));
     }
 
     /**
@@ -134,8 +120,6 @@ class CustomerStatusManagement extends SC_Plugin_Base
     public function register(SC_Helper_Plugin $objHelperPlugin, $priority)
     {
         $objHelperPlugin->addAction("loadClassFileChange", array(&$this, "loadClassFileChange"), $priority);
-        $objHelperPlugin->addAction("prefilterTransform", array(&$this, "prefilterTransform"), $priority);
-        $objHelperPlugin->addAction("outputfilterTransform", array(&$this, "outputfilterTransform"), $priority);
 
     }
 
@@ -150,79 +134,9 @@ class CustomerStatusManagement extends SC_Plugin_Base
         $base_path = PLUGIN_UPLOAD_REALDIR . basename(__DIR__) . "/data/class/";
         
         if ($classname == "SC_Customer_Ex") {
-            $classname = "plg_CustomerStatusManagement_SC_Customer";
+            $classname = "plg_LoginAllCustomerStatus_SC_Customer";
             $classpath = $base_path . $classname . ".php";
         }
-    }
-
-    /**
-     * テンプレートをフックする
-     *
-     * @param string &$source
-     * @param LC_Page_Ex $objPage
-     * @param string $filename
-     * @return void
-     */
-    public function prefilterTransform(&$source, LC_Page_Ex $objPage, $filename)
-    {
-        $objTransform = new SC_Helper_Transform($source);
-        switch ($objPage->arrPageLayout['device_type_id']) {
-            case DEVICE_TYPE_PC:
-                break;
-            case DEVICE_TYPE_MOBILE:
-                break;
-            case DEVICE_TYPE_SMARTPHONE:
-                break;
-            case DEVICE_TYPE_ADMIN:
-            default:
-                if (strpos($filename, "customer/subnavi.tpl") !== false) {
-                    $template_path = "customer/plg_subnavi.tpl";
-                    $template = "<!--{include file='{$template_path}'}-->";
-                    $objTransform->select('ul')->appendChild($template);
-                }
-                break;
-        }
-        $source = $objTransform->getHTML();
-
-    }
-
-    /**
-     * テンプレートをフックする
-     * Smartyの編集はできない
-     *
-     * @param string &$source
-     * @param LC_Page_Ex $objPage
-     * @param string $filename
-     * @return void
-     */
-    public function outputfilterTransform(&$source, LC_Page_Ex $objPage, $filename)
-    {
-        $objTransform = new SC_Helper_Transform($source);
-        $template_dir = PLUGIN_UPLOAD_REALDIR . basename(__DIR__) . "/data/Smarty/templates/";
-        switch ($objPage->arrPageLayout['device_type_id']) {
-            case DEVICE_TYPE_PC:
-                break;
-            case DEVICE_TYPE_MOBILE:
-                break;
-            case DEVICE_TYPE_SMARTPHONE:
-                break;
-            case DEVICE_TYPE_ADMIN:
-            default:
-                break;
-        }
-        $source = $objTransform->getHTML();
-
-    }
-    
-    /**
-     * プラグイン情報更新
-     * 
-     * @param string $plugin_code
-     * @param array $free_fields
-     */
-    public static function updatePlugin($plugin_code, array $free_fields){
-        $objQuery = & SC_Query_Ex::getSingletonInstance();
-        $objQuery->update("dtb_plugin", $free_fields, "plugin_code = ?", array($plugin_code));
     }
     
     /**

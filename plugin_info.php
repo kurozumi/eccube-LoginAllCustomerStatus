@@ -34,13 +34,13 @@
 class plugin_info
 {
     /** プラグインコード(必須)：システム上でのキーとなります。プラグインコードは一意である必要があります。 */
-    static $PLUGIN_CODE = "CustomerStatusManagement";
+    static $PLUGIN_CODE = "LoginAllCustomerStatus";
 
     /** プラグイン名(必須)：プラグイン管理・画面出力（エラーメッセージetc）にはこの値が出力されます。 */
-    static $PLUGIN_NAME = "会員種別管理プラグイン";
+    static $PLUGIN_NAME = "すべての会員ステータスでログイン";
 
     /** プラグインメインクラス名(必須)：本体がプラグインを実行する際に呼ばれるクラス。拡張子は不要です。 */
-    static $CLASS_NAME = "CustomerStatusManagement";
+    static $CLASS_NAME = "LoginAllCustomerStatus";
 
     /** プラグインバージョン(必須) */
     static $PLUGIN_VERSION = "0.1";
@@ -52,7 +52,7 @@ class plugin_info
     static $AUTHOR = "kurozumi";
 
     /** 説明(必須) */
-    static $DESCRIPTION = "追加した会員状態でログインできるプラグインです。";
+    static $DESCRIPTION = "仮会員以外のすべての会員ステータスでログインできるプラグインです。";
 
     /** 作者用のサイトURL：設定されている場合はプラグイン管理画面の作者名がリンクになります。 */
     static $AUTHOR_SITE_URL = "http://a-zumi.net";
@@ -66,8 +66,6 @@ class plugin_info
      */
     static $HOOK_POINTS = array(
         array("loadClassFileChange", "loadClassFileChange"), // SC_系クラスをフック
-        array("prefilterTransform", "prefilterTransform"), // コンパイル前のテンプレートをフック
-        array("outputfilterTransform", "outputfilterTransform") // コンパイル後のテンプレートをフック
     );
 
     /** ライセンス */

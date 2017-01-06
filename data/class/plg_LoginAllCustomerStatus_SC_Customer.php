@@ -24,8 +24,9 @@
 
 require_once CLASS_REALDIR . 'SC_Customer.php';
 
-class plg_CustomerStatusManagement_SC_Customer extends SC_Customer
+class plg_LoginAllCustomerStatus_SC_Customer extends SC_Customer
 {
+
     /**
      * @param string $email
      * @param string $pass
@@ -34,7 +35,7 @@ class plg_CustomerStatusManagement_SC_Customer extends SC_Customer
     {
         $masterData = new SC_DB_MasterData_Ex();
         $arrStatus = $masterData->getMasterData("mtb_customer_status");
-        
+
         // 小文字に変換
         $email = strtolower($email);
         $sql_mobile = $mobile ? ' OR email_mobile = ?' : '';
@@ -42,20 +43,19 @@ class plg_CustomerStatusManagement_SC_Customer extends SC_Customer
         if ($mobile) {
             $arrValues[] = $email;
         }
-        
+
         // 仮会員は除外
         unset($arrStatus[1]);
-        
+
         // 会員ステータスの条件をセット
         $status = array();
-        foreach($arrStatus as $id => $value)
-        {
+        foreach ($arrStatus as $id => $value) {
             $arrValues[] = $id;
             $status[] = "status = ?";
         }
-        
+
         // 仮会員以外どの会員状態でもログイン
-        $sql = 'SELECT * FROM dtb_customer WHERE (email = ?' . $sql_mobile . ') AND del_flg = 0 AND (' . implode(" OR ", $status) . ')';        
+        $sql = 'SELECT * FROM dtb_customer WHERE (email = ?' . $sql_mobile . ') AND del_flg = 0 AND (' . implode(" OR ", $status) . ')';
         $objQuery = & SC_Query_Ex::getSingletonInstance();
         $result = $objQuery->getAll($sql, $arrValues);
         if (empty($result)) {
@@ -73,7 +73,6 @@ class plg_CustomerStatusManagement_SC_Customer extends SC_Customer
         }
 
         return false;
-
     }
 
 }
