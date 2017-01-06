@@ -37,7 +37,7 @@ class plugin_info
     static $PLUGIN_CODE = "CustomerStatusManagement";
 
     /** プラグイン名(必須)：プラグイン管理・画面出力（エラーメッセージetc）にはこの値が出力されます。 */
-    static $PLUGIN_NAME = "会員状態管理プラグイン";
+    static $PLUGIN_NAME = "会員種別管理プラグイン";
 
     /** プラグインメインクラス名(必須)：本体がプラグインを実行する際に呼ばれるクラス。拡張子は不要です。 */
     static $CLASS_NAME = "CustomerStatusManagement";
