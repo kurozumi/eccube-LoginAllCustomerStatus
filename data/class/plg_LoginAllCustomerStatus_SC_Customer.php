@@ -33,46 +33,36 @@ class plg_LoginAllCustomerStatus_SC_Customer extends SC_Customer
      */
     public function getCustomerDataFromEmailPass($pass, $email, $mobile = false)
     {
-        $masterData = new SC_DB_MasterData_Ex();
-        $arrStatus = $masterData->getMasterData("mtb_customer_status");
+        $ret = parent::getCustomerDataFromEmailPass($pass, $email, $mobile);
 
-        // 小文字に変換
-        $email = strtolower($email);
-        $sql_mobile = $mobile ? ' OR email_mobile = ?' : '';
-        $arrValues = array($email);
-        if ($mobile) {
-            $arrValues[] = $email;
-        }
+        if ($ret === false) {
+            // 小文字に変換
+            $email = strtolower($email);
+            $sql_mobile = $mobile ? ' OR email_mobile = ?' : '';
+            $arrValues = array($email);
+            if ($mobile) {
+                $arrValues[] = $email;
+            }
+            // 本登録された会員のみ
+            $sql = 'SELECT * FROM dtb_customer WHERE (email = ?' . $sql_mobile . ') AND del_flg = 0 AND status <> 1';
+            $objQuery = & SC_Query_Ex::getSingletonInstance();
+            $result = $objQuery->getAll($sql, $arrValues);
+            if (empty($result)) {
+                return false;
+            } else {
+                $data = $result[0];
+            }
 
-        // 仮会員は除外
-        unset($arrStatus[1]);
+            // パスワードが合っていれば会員情報をcustomer_dataにセットしてtrueを返す
+            if (SC_Utils_Ex::sfIsMatchHashPassword($pass, $data['password'], $data['salt'])) {
+                $this->customer_data = $data;
+                $this->startSession();
 
-        // 会員ステータスの条件をセット
-        $status = array();
-        foreach ($arrStatus as $id => $value) {
-            $arrValues[] = $id;
-            $status[] = "status = ?";
-        }
+                return true;
+            }
 
-        // 仮会員以外どの会員状態でもログイン
-        $sql = 'SELECT * FROM dtb_customer WHERE (email = ?' . $sql_mobile . ') AND del_flg = 0 AND (' . implode(" OR ", $status) . ')';
-        $objQuery = & SC_Query_Ex::getSingletonInstance();
-        $result = $objQuery->getAll($sql, $arrValues);
-        if (empty($result)) {
             return false;
-        } else {
-            $data = $result[0];
         }
-
-        // パスワードが合っていれば会員情報をcustomer_dataにセットしてtrueを返す
-        if (SC_Utils_Ex::sfIsMatchHashPassword($pass, $data['password'], $data['salt'])) {
-            $this->customer_data = $data;
-            $this->startSession();
-
-            return true;
-        }
-
-        return false;
     }
 
 }

@@ -43,10 +43,10 @@ class plugin_info
     static $CLASS_NAME = "LoginAllCustomerStatus";
 
     /** プラグインバージョン(必須) */
-    static $PLUGIN_VERSION = "0.1";
+    static $PLUGIN_VERSION = "1.0.0";
 
     /** 本体対応バージョン(必須) */
-    static $COMPLIANT_VERSION = "2.12, 2.13";
+    static $COMPLIANT_VERSION = "2.13";
 
     /** 作者(必須) */
     static $AUTHOR = "kurozumi";
