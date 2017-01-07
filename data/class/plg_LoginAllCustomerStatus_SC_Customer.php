@@ -34,7 +34,7 @@ class plg_LoginAllCustomerStatus_SC_Customer extends SC_Customer
     public function getCustomerDataFromEmailPass($pass, $email, $mobile = false)
     {
         $ret = parent::getCustomerDataFromEmailPass($pass, $email, $mobile);
-
+        
         if ($ret === false) {
             // 小文字に変換
             $email = strtolower($email);
@@ -63,6 +63,8 @@ class plg_LoginAllCustomerStatus_SC_Customer extends SC_Customer
 
             return false;
         }
+        
+        return $ret;
     }
 
 }
