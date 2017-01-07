@@ -60,8 +60,6 @@ class plg_LoginAllCustomerStatus_SC_Customer extends SC_Customer
 
                 return true;
             }
-
-            return false;
         }
         
         return $ret;
